@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+    environment {     
+        DOCKERHUB_CREDENTIALS= credentials('amirukg-dockerhub')     
+    } 
     stages {
         stage('Checkout') {
             steps {
@@ -33,15 +35,10 @@ pipeline {
                 // Push Docker image to Docker Hub
                 script {
                     // Push Docker image to Docker Hub
-                    def dockerHubCredentials = credentials('amirukg-dockerhub')
-
-                    withCredentials([usernamePassword(credentialsId: dockerHubCredentials.id, usernameVariable: 'REGISTRY_USER', passwordVariable: 'REGISTRY_PASSWORD')]) {
-                        sh "docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD docker.io"
-                        sh "docker tag testbuildimage docker.io/amirukg/testbuildimage"
-                        sh "docker push docker.io/amirukg/testbuildimage"
+                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin docker.io'
+					sh 'docker push amirukg/cicd-test'
                     }
-				}
-			}
 		}
+	   }
 	}
 }
