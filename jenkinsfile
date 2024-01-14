@@ -30,10 +30,13 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                // Push Docker image to a registry
-                withCredentials([usernamePassword(credentialsId: 'your-registry-credentials-id', usernameVariable: 'REGISTRY_USER', passwordVariable: 'REGISTRY_PASSWORD')]) {
-                    sh "docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD your-container-registry"
-                    sh 'docker push testbuildimage'
+                // Push Docker image to Docker Hub
+                script {
+                    def dockerHubCredentials = credentials('amirukg-dockerhub')
+
+                    sh "docker login -u ${dockerHubCredentials.username} -p ${dockerHubCredentials.password} docker.io"
+                    sh "docker tag testbuildimage docker.io/amirukg/testbuildimage"
+                    sh "docker push docker.io/amirukg/testbuildimage"
                 }
             }
         }
