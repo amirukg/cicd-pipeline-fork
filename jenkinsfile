@@ -26,7 +26,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t amirukg/testbuildimage:latest .'
+                sh 'docker build -t amirukg/cicd-test:latest .'
             }
         }
 
@@ -36,7 +36,7 @@ pipeline {
                 script {
                     // Push Docker image to Docker Hub
                     sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin docker.io'
-		    sh 'docker push amirukg/cicd-test:latest'
+		    sh 'docker push docker.io/amirukg/cicd-test:latest'
                     }
 		}
 	   }
