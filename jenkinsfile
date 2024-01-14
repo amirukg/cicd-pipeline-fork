@@ -40,7 +40,8 @@ pipeline {
                         sh "docker tag testbuildimage docker.io/amirukg/testbuildimage"
                         sh "docker push docker.io/amirukg/testbuildimage"
                     }
-            }
-        }
-    }
+				}
+			}
+		}
+	}
 }
