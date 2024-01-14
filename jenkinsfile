@@ -32,12 +32,14 @@ pipeline {
             steps {
                 // Push Docker image to Docker Hub
                 script {
+                    // Push Docker image to Docker Hub
                     def dockerHubCredentials = credentials('amirukg-dockerhub')
 
-                    sh "docker login -u ${dockerHubCredentials.username} -p ${dockerHubCredentials.password} docker.io"
-                    sh "docker tag testbuildimage docker.io/amirukg/testbuildimage"
-                    sh "docker push docker.io/amirukg/testbuildimage"
-                }
+                    withCredentials([usernamePassword(credentialsId: dockerHubCredentials.id, usernameVariable: 'REGISTRY_USER', passwordVariable: 'REGISTRY_PASSWORD')]) {
+                        sh "docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD docker.io"
+                        sh "docker tag testbuildimage docker.io/amirukg/testbuildimage"
+                        sh "docker push docker.io/amirukg/testbuildimage"
+                    }
             }
         }
     }
